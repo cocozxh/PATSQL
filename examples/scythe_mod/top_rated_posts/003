@@ -1,0 +1,32 @@
+//Can I concatenate multiple MySQL rows into one field?
+//http://stackoverflow.com/questions/276927/can-i-concatenate-multiple-mysql-rows-into-one-field
+
+#input
+
+|     c    |
+|----------|
+| shopping |
+| fishing  |
+| coding   |
+
+#output
+
+|        c                  |
+|---------------------------|
+| shopping, fishing, coding |
+
+# constraint
+
+{
+	"constants": [ ],
+	"aggregation_functions": ["concat"]
+}
+
+# solution
+
+```sql
+SELECT
+    string_agg(c, ', ') 
+FROM
+    input1
+```

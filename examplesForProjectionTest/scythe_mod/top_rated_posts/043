@@ -1,0 +1,52 @@
+//http://stackoverflow.com/questions/13146304/how-to-select-every-row-where-column-value-is-not-distinct
+//How to Select Every Row Where Column Value is NOT Distinct
+
+#input
+
+CustomerName ,    EmailAddress
+Aaron        ,    aaron@gmail.com
+Christy      ,    aaron@gmail.com
+Jason        ,    jason@gmail.com
+Eric         ,    eric@gmail.com
+EEric         ,    eric@gmail.com
+John         ,    aaron@gmail.com
+
+#output
+
+CustomerName ,    EmailAddress
+Aaron    ,        aaron@gmail.com
+Christy  ,        aaron@gmail.com
+John     ,        aaron@gmail.com
+Eric         ,    eric@gmail.com
+EEric         ,    eric@gmail.com
+
+#constraint
+{
+	"constants": ["1"],
+	"aggregation_functions": ["count"]
+}
+
+#solution
+
+```sql
+SELECT
+    T0.CustomerName,
+    T1.EmailAddress 
+FROM
+    input1 AS T0 
+JOIN
+    (
+        SELECT
+            EmailAddress,
+            count(CustomerName) AS count_CustomerName 
+        FROM
+            input1 
+        GROUP BY
+            EmailAddress
+    ) AS T1 
+        ON T1.EmailAddress = T0.EmailAddress 
+WHERE
+    T1.count_CustomerName > 1 
+ORDER BY
+    T1.EmailAddress ASC
+```

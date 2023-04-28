@@ -1,0 +1,47 @@
+//http://stackoverflow.com/questions/19601948/must-appear-in-the-group-by-clause-or-be-used-in-an-aggregate-function
+// must appear in the GROUP BY clause or be used in an aggregate function
+
+#input
+
+ cname  , wmname ,          avg           
+ canada , zoro   ,     3.0000000000000000
+ canada , aaaa   ,     1.0000000000000000
+ spain  , zzzz   ,     3.0000000000000000
+ spain  , aaaa   ,     5.0000000000000000
+
+#output
+
+ cname  , wmname ,          max           
+ canada , zoro   ,     3.0000000000000000
+ spain  , aaaa   ,     5.0000000000000000
+
+#constraint
+{
+	"constants": [],
+	"aggregation_functions": ["max"]
+}
+
+#solution
+
+```sql
+SELECT
+    T1.cname,
+    T0.wmname,
+    T1.max_avg 
+FROM
+    input1 AS T0 
+JOIN
+    (
+        SELECT
+            cname,
+            max(avg) AS max_avg 
+        FROM
+            input1 
+        GROUP BY
+            cname
+    ) AS T1 
+        ON T1.cname = T0.cname 
+        AND T1.max_avg = T0.avg 
+ORDER BY
+    T1.cname ASC
+```

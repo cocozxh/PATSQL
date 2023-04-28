@@ -1,0 +1,52 @@
+//http://stackoverflow.com/questions/12235595/find-most-frequent-value-in-sql-column
+//Find most frequent value in SQL column
+
+#input
+
+| c     |
+|-------|
+| one   | 
+| two   | 
+| three | 
+| three | 
+
+
+#output
+
+| c      |
+|--------|
+| three  |
+
+#constraint
+{
+	"constants": [],
+	"aggregation_functions": ["count", "max"]
+}
+
+#solution
+
+```sql
+SELECT
+    T2.c 
+FROM
+    (SELECT
+        max(T0.count_c) AS max_T0_count_c 
+    FROM
+        (SELECT
+            count(c) AS count_c 
+        FROM
+            input1 
+        GROUP BY
+            c) AS T0) AS T1 
+    JOIN
+        (
+            SELECT
+                c,
+                count(c) AS count_c 
+            FROM
+                input1 
+            GROUP BY
+                c
+        ) AS T2 
+            ON T1.max_T0_count_c = T2.count_c
+```

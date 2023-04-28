@@ -1,0 +1,3 @@
+minAmount:Int,group:Str,countCol1:Int,maxAmount:Int
+7,A,2,12
+3,B,3,29

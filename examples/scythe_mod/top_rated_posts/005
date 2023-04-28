@@ -1,0 +1,50 @@
+//http://stackoverflow.com/questions/3800551/select-first-row-in-each-group-by-group
+//Select first row in each GROUP BY group?
+
+#input
+
+| id  | customer | total |
+|------------------------|
+| 1   | Joe      | 20    |
+| 2   | Sally    | 50    |
+| 3   | Joe      | 50    |
+| 4   | Sally    | 10    |
+| 5   | abc      | 10    |
+
+#output
+
+| FIRST_id | customer | FIRST_total |
+|-------------------------------------|
+| 1   | Joe      | 20    |
+| 2   | Sally    | 50    |
+| 5   | abc      | 10    |
+
+#constraint
+{
+	"constants": [],
+	"aggregation_functions": ["min", "max"]
+}
+
+#solution
+
+```sql
+SELECT
+    T1.min_id,
+    T1.customer,
+    T0.total 
+FROM
+    input1 AS T0 
+JOIN
+    (
+        SELECT
+            customer,
+            min(id) AS min_id 
+        FROM
+            input1 
+        GROUP BY
+            customer
+    ) AS T1 
+        ON T1.min_id = T0.id 
+ORDER BY
+    T1.customer ASC
+```

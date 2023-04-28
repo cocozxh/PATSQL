@@ -1,0 +1,48 @@
+//http://stackoverflow.com/questions/4662464/how-to-select-only-the-first-rows-for-each-unique-value-of-a-column
+//How to select only the first rows for each unique value of a column
+
+#input
+
+CName,      AddressID,  AddressLine
+John Smith, 123, Nowheresville
+Jane Doe,   456, Evergreen Terrace
+John Smith , 999, Somewhereelse
+Joe Bloggs , 120,  XXX
+Joe Bloggs , 123, Second Ave
+
+#output
+
+CName,      AddressID,  AddressLine
+John Smith, 123, Nowheresville
+Jane Doe,   456, Evergreen Terrace
+Joe Bloggs , 120, XXX
+
+
+# constraint
+{
+	"constants": [ ],
+	"aggregation_functions": ["min"]
+}
+
+#solution
+
+```sql
+SELECT
+    T1.CName,
+    T0.AddressID,
+    T0.AddressLine 
+FROM
+    input1 AS T0 
+JOIN
+    (
+        SELECT
+            CName,
+            min(AddressID) AS min_AddressID 
+        FROM
+            input1 
+        GROUP BY
+            CName
+    ) AS T1 
+        ON T1.CName = T0.CName 
+        AND T1.min_AddressID = T0.AddressID
+```
